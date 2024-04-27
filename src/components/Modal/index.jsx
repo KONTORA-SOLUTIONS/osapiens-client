@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { IoClose } from 'react-icons/io5';
+import { IoClose } from "react-icons/io5";
 
-import styles from './Modal.module.scss';
+import styles from "./Modal.module.scss";
 
 const Modal = ({ setIsModalOpen, imgSrc }) => {
   const closeModalHandler = () => setIsModalOpen(false);
