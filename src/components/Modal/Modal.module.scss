@@ -1,0 +1,45 @@
+@import '../../styles/constants';
+
+.modalOverlay {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: $light-green-with-opacity;
+  backdrop-filter: blur(15px);
+
+  .modalContent {
+    position: relative;
+
+    width: 512px;
+    height: 512px;
+
+    background-color: $white;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .closeBtn {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+
+      color: $primary-green;
+
+      width: 32px;
+      height: 32px;
+
+      cursor: pointer;
+    }
+  }
+}

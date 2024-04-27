@@ -1,0 +1,36 @@
+@import '../../styles/constants';
+
+.cover {
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100vh;
+
+  background-image: url('../../../public/assets/images/cover.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  .heading {
+    position: absolute;
+    width: 50%;
+    left: 14%;
+
+    font-family: 'Montserrat';
+    font-weight: 900;
+
+    font-size: 140px;
+    color: $secondary-green;
+  }
+  @media screen and (min-width: 1660px) {
+    .heading {
+      width: 40%;
+      left: 14%;
+    }
+  }
+}
