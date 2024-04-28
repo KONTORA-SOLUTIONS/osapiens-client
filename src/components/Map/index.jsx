@@ -74,6 +74,39 @@ const Map = () => {
           changeLayer = true;
           newMap.setBaseLayer(defaultLayers.raster.satellite.map);
         }
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          if (map.current) {
+            var bounds = map.current
+              .getViewModel()
+              .getLookAtData()
+              .bounds.getBoundingBox();
+            var SWlong = bounds.getLeft();
+            var SWlat = bounds.getBottom();
+            var NElong = bounds.getRight();
+            var NElat = bounds.getTop();
+            fetch(
+              `http://localhost:8000/pinpoints/?max_latitude=${NElat}&min_latitude=${SWlat}&max_longitude=${NElong}&min_longitude=${SWlong}`,
+              {
+                method: "GET",
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Success:", data);
+                setUserData(data.pinpoints);
+                setIsDataSending(false); // Update the UI based on the response
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                setIsDataSending(false); // Handle errors here
+              });
+
+            if (imageURL) {
+              window.URL.revokeObjectURL(imageURL);
+            }
+          }
+        }, 1000);
       });
 
       newMap.addEventListener("dragend", (ev) => {
@@ -143,7 +176,6 @@ const Map = () => {
         function (evt) {
           let curId = evt.target.getData();
           setActivePinpointId(curId);
-          //TODO make the PinpointCard with userID green
         },
         false
       );
