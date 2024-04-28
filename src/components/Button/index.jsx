@@ -16,10 +16,10 @@ import styled from "styled-components";
 
 // export default Button;
 
-const Button = ({ onClick, active }) => {
+const Button = ({ onClick, active, text = "Scan" }) => {
   return (
     <Wrapper active={active} onClick={active ? onClick : () => {}}>
-      <Text>Scan</Text>
+      <Text>{text}</Text>
     </Wrapper>
   );
 };

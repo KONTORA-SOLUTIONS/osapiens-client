@@ -1,4 +1,4 @@
-@import '../../styles/_constants';
+@import "../../styles/_constants";
 
 .button {
   padding: 8px;
@@ -16,4 +16,10 @@
   border-radius: 5px;
   border: none;
   background-color: $primary-green;
+}
+
+#publish {
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }

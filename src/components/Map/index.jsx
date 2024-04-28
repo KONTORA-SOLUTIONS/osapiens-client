@@ -11,6 +11,7 @@ import PinpointCard from "../PinpointCard/PinpointCard";
 
 const Map = () => {
   const [isCaptureAvailable, setIsCaptureAvailable] = useState(false);
+  const [isPublishAvailable, setIsPublishAvailable] = useState(false);
   const [mapSnapshot, setMapSnapshot] = useState();
   const [isDataSending, setIsDataSending] = useState(false);
   const [imageURL, setImageURL] = useState(null);
@@ -205,6 +206,7 @@ const Map = () => {
 
   const captureMap = () => {
     setIsCaptureAvailable(false);
+    setIsPublishAvailable(true);
     setIsDataSending(true);
     if (behavior.current) {
       behavior.current.disable();
@@ -259,6 +261,32 @@ const Map = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const publish = () => {
+    setIsPublishAvailable(false);
+    setIsCaptureAvailable(true);
+    setIsModalOpen(false);
+
+    const newPoint = map.current.getCenter();
+    console.log(newPoint.lat, newPoint.lng);
+
+    fetch("http://localhost:8000/pinpoints", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization22:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEiLCJleHAiOjE3MTQ1MDE0Mjl9.lRwK4MEnuKv0c8W26Ozz-Nfnhq_lBn-nwvQqq3xKlc0",
+      },
+      body: JSON.stringify({
+        latitude: newPoint.lat,
+        longitude: newPoint.lng,
+        comment: "This is a new comment",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+  };
+
   return (
     <>
       <Wrapper>
@@ -275,9 +303,14 @@ const Map = () => {
               )}
               <MapItself ref={mapRef} />
             </MapRelativeWrapper>
-            <Button active={isCaptureAvailable} onClick={captureMap}>
-              Capture Map
-            </Button>
+            <ButtonBox>
+              <Button active={isCaptureAvailable} onClick={captureMap}></Button>
+              <Button
+                active={isPublishAvailable}
+                onClick={publish}
+                text="Publish"
+              ></Button>
+            </ButtonBox>
           </MapFlex>
           <ReviewCardList>
             {userData.map((item) => (
@@ -295,6 +328,11 @@ const Map = () => {
     </>
   );
 };
+
+const ButtonBox = styled.div`
+  display: flex;
+  row-gap: 30px;
+`;
 
 const Wrapper = styled.div`
   display: flex;

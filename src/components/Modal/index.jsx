@@ -6,6 +6,7 @@ import styles from "./Modal.module.scss";
 
 import styled from "styled-components";
 import { CloseIcon } from "../Icons/Icons";
+import Button from "../Button";
 
 const Modal = ({ setIsModalOpen, imgSrc, setIsCaptureAvailable }) => {
   const closeModalHandler = () => {
