@@ -24,19 +24,41 @@ export const CloseIcon = () => (
   </svg>
 );
 
-export const UpvoteIcon = () => (
+// export const UpvoteIcon = () => (
+//   <svg
+//     version="1.1"
+//     id="Icons"
+//     xmlns="http://www.w3.org/2000/svg"
+//     viewBox="0 0 32 32"
+//     width="30px"
+//   >
+//     <path
+//       class="st0"
+//       d="M16.8,9.3l9.4,9.3c1,1,1,2.6,0,3.6l0,0c-1,1-2.6,1-3.6,0l-5.8-5.7c-0.5-0.5-1.2-0.5-1.7,0l-5.8,5.7
+// c-1,1-2.6,1-3.6,0l0,0c-1-1-1-2.6,0-3.6l9.4-9.3C15.6,8.9,16.4,8.9,16.8,9.3z"
+//       fill="#33CC33"
+//     />
+//   </svg>
+// );
+
+// const UpvoteIcon = ({ onClick }) => (
+//   <svg onClick={onClick} style={{ cursor: 'pointer' }} /* SVG attributes here */>
+//     {/* SVG content */}
+//   </svg>
+// );
+
+export const UpvoteIcon = ({ filled }) => (
   <svg
-    version="1.1"
-    id="Icons"
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    width="30px"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill={filled ? "#33cc33" : "none"}
+    stroke="#33cc33"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <path
-      class="st0"
-      d="M16.8,9.3l9.4,9.3c1,1,1,2.6,0,3.6l0,0c-1,1-2.6,1-3.6,0l-5.8-5.7c-0.5-0.5-1.2-0.5-1.7,0l-5.8,5.7
-c-1,1-2.6,1-3.6,0l0,0c-1-1-1-2.6,0-3.6l9.4-9.3C15.6,8.9,16.4,8.9,16.8,9.3z"
-      fill="#33CC33"
-    />
+    <path d="M12 1l6 6h-4v10h-4v-10h-4l6-6z" />
   </svg>
 );

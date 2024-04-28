@@ -1,17 +1,47 @@
 import styled from "styled-components";
 import { UpvoteIcon } from "../Icons/Icons";
+import React, { useState } from "react";
 
-const PinpointCard = ({ id, user: { full_name }, text, isActive = false }) => {
+const PinpointCard = ({
+  id,
+  user: { full_name },
+  initialText,
+  isActive = false,
+}) => {
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * (1000 - 237 + 1)) + 237;
+  }
+  const [text, setText] = useState(generateRandomNumber());
+
+  const [upvoted, setUpvoted] = useState(false);
+
+  console.log(initialText);
+
   return (
     <Wrapper isActive={isActive} className="aaa333aaa333aaa">
-      <div>
+      <div style={{ display: "flex" }}>
         <Title isActive={isActive}>
           <HighlightText>Pinpoint {id}</HighlightText> | Created by {full_name}
         </Title>
       </div>
-
-      <Text isActive={true}>{text}</Text>
-      <UpvoteIcon></UpvoteIcon>
+      <div
+        onClick={() => {
+          if (!upvoted) setText(parseInt(text) + 1);
+          else setText(parseInt(text) - 1);
+          setUpvoted(!upvoted);
+        }}
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          rowGap: "20px",
+        }}
+      >
+        <Title isActive={isActive}>
+          <HighlightText>{text}</HighlightText>
+        </Title>
+        <UpvoteIcon filled={upvoted}></UpvoteIcon>
+      </div>
     </Wrapper>
   );
 };

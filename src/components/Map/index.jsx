@@ -135,9 +135,6 @@ const Map = () => {
         lng: data.longitude,
       });
 
-      const randomNumber = Math.floor(Math.random() * 1001);
-      data.text = randomNumber;
-
       marker.setData(data.id);
 
       // Add a tap event listener to the marker to show the InfoBubble
@@ -247,7 +244,7 @@ const Map = () => {
                 key={item.id}
                 id={item.id}
                 user={item.user}
-                text={item.text}
+                initialText={item.comment}
                 isActive={item.id === activePinpointId}
               />
             ))}
