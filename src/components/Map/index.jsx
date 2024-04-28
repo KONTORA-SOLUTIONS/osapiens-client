@@ -27,6 +27,15 @@ const Map = () => {
   let changeLayer = true;
   let timeoutId = null;
 
+  const testUser = {
+    id: 1213,
+    latitude: 48.2589117,
+    longitude: 11.6709184,
+    user: { id: 1, full_name: "David Podolskiy" },
+
+    comment: "237",
+  };
+
   useEffect(() => {
     if (!map.current) {
       platform.current = new H.service.Platform({

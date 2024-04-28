@@ -6,14 +6,14 @@ const StatisticsBlock = () => {
     <Wrapper>
       <TextBlock>
         <TextElement
-          number="98%"
-          title="of cases doesn’t even get investigated"
-          text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+          number="95%"
+          title="of Amazon deforestation is near rodes and rivers"
+          text="This suggests that access to infrastructure is a critical factor in deforestation. This lack of investigation likely contributes to ongoing environmental degradation and loss of biodiversity."
         />
         <TextElement
           number="98%"
-          title="of cases doesn’t even get investigated"
-          text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+          title="of Brazil`s deforestation alerts don`t get investigated"
+          text="This alarming statistic highlights the challenges in enforcing environmental laws and protecting critical habitats. As a result, illegal logging and land clearing continue to thrive, exacerbating the loss of biodiversity and contributing to global climate change."
         />
       </TextBlock>
       <FoggedForestImage
@@ -31,6 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const FoggedForestImage = styled.img`
+  align-self: center;
   width: 100%;
   border-radius: 10px;
 `;
@@ -39,7 +40,7 @@ const TextBlock = styled.div`
   align-self: center;
   display: flex;
   flex-direction: column;
-  row-gap: 50px;
+  row-gap: 30px;
 `;
 
 export default StatisticsBlock;
