@@ -141,12 +141,11 @@ const Map = () => {
       marker.addEventListener(
         "tap",
         function (evt) {
-          var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            // read custom data
+          const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
             content: evt.target.getData(),
           });
-          // show info bubble
-          // Ensure all other bubbles are closed before opening a new one
+
+          console.log(bubble);
           ui.current
             .getBubbles()
             .forEach((bub) => ui.current.removeBubble(bub));
