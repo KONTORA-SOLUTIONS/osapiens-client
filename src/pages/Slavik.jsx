@@ -3,7 +3,7 @@ import Cover from "../components/Cover";
 import Header from "../components/Header/Header";
 import ChangingTextBlock from "../modules/ChangingTextBlock/ChangingTextBlock";
 import StatisticsBlock from "../modules/StatisticsBlock/StatisticsBlock";
-import MapBlock from "../modules/MapBlock/MapBlock";
+import Map from "../components/Map";
 
 const Slavik = () => {
   return (
@@ -12,7 +12,7 @@ const Slavik = () => {
       <Content>
         <ChangingTextBlock />
         <StatisticsBlock />
-        <MapBlock />
+        <Map />
       </Content>
     </PageLayout>
   );
@@ -29,7 +29,7 @@ const PageLayout = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 50px 100px;
+  padding: 50px 100px 10px 100px;
   display: flex;
   flex-direction: column;
   row-gap: 100px;

@@ -1,21 +1,25 @@
 import styled from "styled-components";
+import { UpvoteIcon } from "../Icons/Icons";
 
-const PinpointCard = ({ id, user: { full_name }, text }) => {
+const PinpointCard = ({ id, user: { full_name }, text, isActive = false }) => {
   return (
-    <Wrapper className="aaa333aaa333aaa">
-      <Title>
-        <HighlightText>Pinpoint {id}</HighlightText> | Created by {full_name}
-      </Title>
-      <Text>{text}</Text>
+    <Wrapper isActive={isActive} className="aaa333aaa333aaa">
+      <div>
+        <Title isActive={isActive}>
+          <HighlightText>Pinpoint {id}</HighlightText> | Created by {full_name}
+        </Title>
+      </div>
+
+      <Text isActive={true}>{text}</Text>
+      <UpvoteIcon></UpvoteIcon>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   row-gap: 20px;
-
   border-top: 1px solid #fff;
   padding: 15px 0;
 
@@ -25,7 +29,8 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.p`
-  color: #fff;
+  color: ${(props) =>
+    props.isActive ? "#00ff00" : "#fff"}; /* Green if active, white otherwise */
   font-size: 20px;
 `;
 
@@ -34,7 +39,8 @@ const HighlightText = styled.span`
 `;
 
 const Text = styled.p`
-  color: #fff;
+  color: ${(props) =>
+    props.isActive ? "#00ff00" : "#fff"}; /* Green if active, white otherwise */
   font-size: 16px;
 `;
 

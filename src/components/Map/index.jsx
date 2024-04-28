@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import H from "@here/maps-api-for-javascript";
 import Button from "../Button";
 import { API_KEY } from "../../contants";
@@ -6,6 +7,7 @@ import { downloadImage, getEdgeCoordinates } from "../../helpers";
 import styles from "./Map.module.scss";
 import Loader from "../Loader";
 import Modal from "../Modal";
+import PinpointCard from "../PinpointCard/PinpointCard";
 
 const Map = () => {
   const [isCaptureAvailable, setIsCaptureAvailable] = useState(false);
@@ -13,6 +15,7 @@ const Map = () => {
   const [isDataSending, setIsDataSending] = useState(false);
   const [imageURL, setImageURL] = useState(null);
   const [userData, setUserData] = useState([]);
+  const [activePinpointId, setActivePinpointId] = useState(null);
 
   const mapRef = useRef(null);
   const map = useRef(null);
@@ -106,7 +109,7 @@ const Map = () => {
               window.URL.revokeObjectURL(imageURL);
             }
           }
-        }, 2000); // every 5 seconds
+        }, 1000); // 1  second after move
       });
 
       map.current = newMap;
@@ -132,24 +135,18 @@ const Map = () => {
         lng: data.longitude,
       });
 
-      marker.setData(
-        '<div><a href="https://www.liverpoolfc.tv" target="_blank">Liverpool</a></div>' +
-          "<div>Anfield<br />Capacity: 54,074</div>"
-      );
+      const randomNumber = Math.floor(Math.random() * 1001);
+      data.text = randomNumber;
+
+      marker.setData(data.id);
 
       // Add a tap event listener to the marker to show the InfoBubble
       marker.addEventListener(
         "tap",
         function (evt) {
-          const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            content: evt.target.getData(),
-          });
-
-          console.log(bubble);
-          ui.current
-            .getBubbles()
-            .forEach((bub) => ui.current.removeBubble(bub));
-          ui.current.addBubble(bubble);
+          let curId = evt.target.getData();
+          setActivePinpointId(curId);
+          //TODO make the PinpointCard with userID green
         },
         false
       );
@@ -169,6 +166,7 @@ const Map = () => {
   }, [imageURL]);
 
   const captureMap = () => {
+    setIsCaptureAvailable(false);
     setIsDataSending(true);
     if (behavior.current) {
       behavior.current.disable();
@@ -225,25 +223,98 @@ const Map = () => {
 
   return (
     <>
-      {isModalOpen && (
-        <Modal
-          setIsModalOpen={setIsModalOpen}
-          imgSrc={imageURL || "/assets/images/modal-test.png"} // Fallback to default if imageURL not yet set
-        />
-      )}
-      <div className={styles.mapWrapper}>
-        <Loader
-          isLoading={isDataSending}
-          infoMessage="Your response is being sent"
-        />
-        <div className={styles.map} ref={mapRef} />
-        {isCaptureAvailable && (
-          <Button onClick={captureMap} className={styles.captureBtn}>
-            Capture Map
-          </Button>
-        )}
-      </div>
+      <Wrapper>
+        <Title>What's poppin</Title>
+        <MapGrid>
+          <MapFlex>
+            <MapRelativeWrapper>
+              {isModalOpen && (
+                <Modal
+                  setIsCaptureAvailable={setIsCaptureAvailable}
+                  setIsModalOpen={setIsModalOpen}
+                  imgSrc={imageURL || "/assets/images/modal-test.png"} // Fallback to default if imageURL not yet set
+                />
+              )}
+              <MapItself ref={mapRef} />
+            </MapRelativeWrapper>
+            <Button active={isCaptureAvailable} onClick={captureMap}>
+              Capture Map
+            </Button>
+          </MapFlex>
+          <ReviewCardList>
+            {userData.map((item) => (
+              <PinpointCard
+                key={item.id}
+                id={item.id}
+                user={item.user}
+                text={item.text}
+                isActive={item.id === activePinpointId}
+              />
+            ))}
+          </ReviewCardList>
+        </MapGrid>
+      </Wrapper>
     </>
   );
 };
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+`;
+
+const MapGrid = styled.div`
+  display: grid;
+  column-gap: 50px;
+  grid-template-columns: 512px auto;
+`;
+
+const Title = styled.p`
+  font-weight: bold;
+  color: #fff;
+  font-size: 64px;
+  text-align: center;
+`;
+
+const ReviewCardList = styled.div`
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+
+  /* Custom scrollbar styles */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #525252;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #b8b8b8;
+    border-radius: 2px;
+  }
+`;
+
+const MapFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  position: relative;
+`;
+
+const MapItself = styled.div`
+  width: 512px;
+  height: 512px;
+`;
+
+const MapRelativeWrapper = styled.div`
+  position: relative;
+  width: 512px;
+  height: 512px;
+`;
+
 export default Map;
