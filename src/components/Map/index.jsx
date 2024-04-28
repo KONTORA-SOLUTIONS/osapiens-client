@@ -12,13 +12,17 @@ const Map = () => {
   const [mapSnapshot, setMapSnapshot] = useState();
   const [isDataSending, setIsDataSending] = useState(false);
   const [imageURL, setImageURL] = useState(null);
+  const [userData, setUserData] = useState([]);
 
   const mapRef = useRef(null);
   const map = useRef(null);
   const platform = useRef(null);
   const behavior = useRef(null);
+  const ui = useRef(null);
+  const markers = useRef([]);
 
   let changeLayer = true;
+  let timeoutId = null;
 
   useEffect(() => {
     if (!map.current) {
@@ -52,6 +56,10 @@ const Map = () => {
 
       // Add event listener for zoom change to toggle capture availability
       newMap.addEventListener("mapviewchange", function () {
+        if (!ui.current) {
+          // This checks if ui.current has not been initialized
+          ui.current = H.ui.UI.createDefault(map.current, defaultLayers);
+        }
         const currentZoom = newMap.getZoom();
         console.log(currentZoom);
         setIsCaptureAvailable(currentZoom >= 14);
@@ -65,49 +73,95 @@ const Map = () => {
         }
       });
 
+      newMap.addEventListener("dragend", (ev) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          if (map.current) {
+            var bounds = map.current
+              .getViewModel()
+              .getLookAtData()
+              .bounds.getBoundingBox();
+            var SWlong = bounds.getLeft();
+            var SWlat = bounds.getBottom();
+            var NElong = bounds.getRight();
+            var NElat = bounds.getTop();
+            fetch(
+              `http://localhost:8000/pinpoints/?max_latitude=${NElat}&min_latitude=${SWlat}&max_longitude=${NElong}&min_longitude=${SWlong}`,
+              {
+                method: "GET",
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Success:", data);
+                setUserData(data.pinpoints);
+                setIsDataSending(false); // Update the UI based on the response
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                setIsDataSending(false); // Handle errors here
+              });
+
+            if (imageURL) {
+              window.URL.revokeObjectURL(imageURL);
+            }
+          }
+        }, 2000); // every 5 seconds
+      });
+
       map.current = newMap;
     }
   }, []);
 
   useEffect(() => {
-    return () => {
-      if (imageURL) {
-        window.URL.revokeObjectURL(imageURL);
-      }
-    };
-  }, [imageURL]);
+    if (map.current && userData.length > 0) {
+      addMarkers(); // Ensure addMarkers is called within useEffect
+    }
+  }, [userData]);
+
+  const addMarkers = () => {
+    markers.current.forEach((marker) => map.current.removeObject(marker)); // Clear existing markers
+    markers.current = [];
+
+    userData.forEach((data) => {
+      if (!data.latitude || !data.longitude) return; // Skip if data is incomplete
+
+      // Create a marker at the specified location
+      const marker = new H.map.Marker({
+        lat: data.latitude,
+        lng: data.longitude,
+      });
+
+      marker.setData(
+        '<div><a href="https://www.liverpoolfc.tv" target="_blank">Liverpool</a></div>' +
+          "<div>Anfield<br />Capacity: 54,074</div>"
+      );
+
+      // Add a tap event listener to the marker to show the InfoBubble
+      marker.addEventListener(
+        "tap",
+        function (evt) {
+          const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+            content: evt.target.getData(),
+          });
+
+          console.log(bubble);
+          ui.current
+            .getBubbles()
+            .forEach((bub) => ui.current.removeBubble(bub));
+          ui.current.addBubble(bubble);
+        },
+        false
+      );
+
+      // Add the marker to the map and store it in the markers ref
+      map.current.addObject(marker);
+      markers.current.push(marker);
+    });
+  };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (map.current) {
-        var bounds = map.current
-          .getViewModel()
-          .getLookAtData()
-          .bounds.getBoundingBox();
-        var SWlong = bounds.getLeft();
-        var SWlat = bounds.getBottom();
-        var NElong = bounds.getRight();
-        var NElat = bounds.getTop();
-        fetch(
-          `http://localhost:8000/pinpoints/?max_latitude=${NElat}&min_latitude=${SWlat}&max_longitude=${NElong}&min_longitude=${SWlong}`,
-          {
-            method: "GET",
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-            setIsDataSending(false); // Update the UI based on the response
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            setIsDataSending(false); // Handle errors here
-          });
-      }
-    }, 5000); // every 5 seconds
-
     return () => {
-      clearInterval(intervalId);
       if (imageURL) {
         window.URL.revokeObjectURL(imageURL);
       }
